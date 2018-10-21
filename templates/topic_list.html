@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}
+{{ block.super }}
+{% endblock %}
+{% block breadcrumb %}
+			<li class="breadcrumb-item"><a href="{% url 'home' %}">Boards</a></li>
+			<li class="breadcrumb-item active">{{ board.name }}</li>
+{% endblock %}
+{% block content %}
+<!-- <div class="topic_list"> -->
+	<div class="mb-2">
+		<a href="{% url 'new_topic' board.pk %}" class="btn btn-primary">New Topic</a>
+	</div>
+<div class="mb-4" style="overflow-x:auto;">
+<table>
+	<tr>
+    <th>Topic</th>
+    <th>User</th>
+    <th>Replies</th>
+    <th>Views</th>
+    <th>Date</th>
+  </tr>
+{% for topic in page_of_topic_list %}
+
+<tr>
+	<td><a class="topic_list"href="{% url 'topic_view' board.pk topic.pk %}"> {{ topic.subject }}</a></td>
+	<td>{{ topic.published_by }}</td>
+	<td>{{ topic.topic_comment.all.count }}</td>
+	<td>{{ topic.views }}</td>
+	<td>{{ topic.published_at|timesince }} ago</td>
+
+</tr>
+{% endfor %}
+</table>
+
+</div>
+
+{% if page_of_topic_list.has_other_pages %}
+<div aria-label="Page navigation">
+<ul class="pagination">
+	{% if page_of_topic_list.has_previous %}
+	<li class="page-item"><a class="page-link" href="?page={{ page_of_topic_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
+	</li>
+	{% else %}
+		<li class="page-item disabled">
+			<span class="page-link">Previous</span>
+		</li>
+	{% endif %}
+
+	{% for page_num in page_of_topic_list.paginator.page_range %}
+		{% if page_of_topic_list.number == page_num %}
+			<li class="page-item active">
+				<span class="page-link">
+					{{ page_num }}
+					<span class="sr-only">(current)</span>
+				</span>
+			</li>
+			{% else %}
+    			<li class="page-item"><a class="page-link" href="?page={{ page_num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ page_num }}</a>
+    			</li>
+    		{% endif %}
+    	{% endfor %}
+
+    	{% if page_of_topic_list.has_next %}
+    		<li class="page-item">
+    			<a class="page-link" href="?page={{ page_of_topic_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
+    		</li>
+    	{% else %}
+    		<li class="page-item disabled"><span class="page-link">Next</span>
+    		</li>
+    	{% endif %}
+</ul>
+</div>
+{% endif %}
+{% endblock %}
+</body>
+</html>

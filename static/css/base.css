@@ -1,0 +1,54 @@
+div.board h1 {
+	font-size: 30px;
+}
+
+.p_name{
+	text-align: justify;
+	margin-bottom: 5px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #eee;
+}
+div.topics_count {
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 5px;
+
+}
+table{
+
+	width:100%;
+}
+th{
+	height: 50px;
+}
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+tr:nth-child(even) {background-color: #f2f2f2;}
+/*p.board_title {
+  margin: 0;
+  padding: 0; 
+}*/
+
+.navbar-brand {
+	font-family: 'Fjalla One', sans-serif;
+	font-size: 30px !important;
+}
+.navbar{
+	background-color: rgb(10, 121, 32);
+}
+
+a.board_text{
+	font-family: 'Lato', sans-serif;
+	text-decoration: none !important;
+	font-size:20px;
+}
+
+.topic_list{
+	text-decoration: none !important;
+	color: gray;
+}
+

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Boards</li>
+{% endblock %}
+{% block content %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-7 col-md-7 col-lg-7" >
+			<table>
+				<tr>
+    				<th>Board</th>
+    				<th>Topics</th>
+    				
+    			</tr>
+				{% for board in boards %}
+				<tr>
+				<td><a class="board_text"href="{% url 'topic_list' board.pk %}">{{ board.name }} </a>
+					<p class="text-muted">{{ board.description }}</p>
+				</td>
+				<td>{{ board.topics.count }}</td>
+
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+
+
+
+		<div class="col-sm-5 col-md-5 col-lg-5">
+			<table>
+				<tr>
+    				<th>Latest</th>
+    			</tr>
+				{% for recent_topic in recent_topics %}
+				<tr>
+					<td>
+						<div><a href="{% url 'topic_view' recent_topic.board.pk recent_topic.pk %}">{{ recent_topic}}</a></div>
+						<div>
+							<small>{{ recent_topic.published_at|timesince }} ago</small></div>
+						<div>
+							<small>Board:{{ recent_topic.board }}</small></div>
+				</td>
+
+				
+					<td>
+				</tr>
+
+				{% endfor %}
+			</table>
+		</div>
+		
+	</div>
+</div>
+{% endblock %}

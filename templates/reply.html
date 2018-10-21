@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/simplemde.min.css' %}">
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/simplemde.min.js' %}"></script>
+<script>
+	var simplemde = new SimpleMDE();
+</script>
+{% endblock %}
+{% block nob %}
+{{ topic }}
+{{ topic.content }}
+<div class="offset-3 col-md-6">		
+<form action=" {% url 'update_comment' %}" method="POST" novalidate >
+	<div class="form-group mb-0">
+  		{% csrf_token %}
+  		{% for hidden in comment_form.hidden_fields %}
+  		{{ hidden }}
+  		{% endfor %}
+  		{% for field in comment_form.visible_fields %}
+  		{{ field.label_tag }}
+  		{{ field|add_class:'form-control' }}
+  		{% endfor %}
+  </div>
+  	<input type="submit" value="submit" class="btn btn-primary">
+
+</form>
+</div>
+
+{% endblock nob %}

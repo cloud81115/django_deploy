@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load widget_tweaks %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/simplemde.min.css' %}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/simplemde.min.js' %}"></script>
+<script>
+  var simplemde = new SimpleMDE();
+</script>
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Boards</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'topic_list' topic_view.board.pk %}">{{ topic_view.board.name }}</a></li>
+  <li class="breadcrumb-item active">{{ topic_view.subject }}</li>
+{% endblock %}
+
+{% block content %}
+ 
+  <div class="col-8">
+  <h2>{{ topic_view.subject }}</h2>
+    <div class="card border-right-0 border-left-0 mb-2" style="border-color:black; border-radius: 0px;">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-2">
+            <img src="{% static 'img/avatar.png' %}">
+          </div>
+          <div class="col-10 " >
+            <div class="row mb-3">
+              <div class="col-6">
+                <strong class="text-muted">{{ topic_view.published_by }}</strong>
+              </div>
+              <div class="col-6 text-right">
+                <small class="text-muted">{{ topic_view.published_at }}</small>
+              </div>
+            </div>
+            
+              <div >{{ topic_view.content }}</div>
+                {% if topic_view.published_by == user %}
+                <a href="{% url 'edit_topic' topic_view.board.pk topic_view.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'delete_topic' topic_view.board.pk topic_view.pk %}" class="btn btn-danger">Delete</a>
+              
+              {% endif %}
+          </div>
+          
+        </div>
+      </div>
+  </div>
+<!-- 合併 -->
+{% if user.is_authenticated %}
+<div >   
+<form action=" {% url 'topic_view' topic_view.board.pk topic_view.pk %}" method="POST" novalidate >
+  <div class="form-group mb-0">
+      {% csrf_token %}
+      {% for hidden in comment_form.hidden_fields %}
+      {{ hidden }}
+      {% endfor %}
+      {% for field in comment_form.visible_fields %}
+      {{ field.label_tag }}
+      {{ field|add_class:'form-control' }}
+      {% endfor %}
+  </div>
+    <input type="submit" value="submit" class="btn btn-primary">
+</form>
+</div>
+
+<!-- 合併 -->
+{% else %}
+  <form class="form-inline ml-auto">
+    <p style="color:red;">Please 
+    <input type="hidden" name="next" value="{{ next }}">
+    <a href="{% url 'login' %}" class="btn btn-outline-secondary">Log in</a> or 
+    <a href="{% url 'signup' %}" class="btn btn-primary ml-2">Sign up</a> to reply
+    </p>
+  </form>
+
+{% endif %}
+    {% for comment in comments %}
+    <div class="card border-right-0 border-left-0" style="border-radius:0px;">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-2">
+            <img src="{% static 'img/avatar.png' %}">
+          </div>
+          <div class="col-10">
+            <div class="row mb-3">
+            <div class="col-6">
+              <strong class="text-muted">{{ comment.user }}</strong>
+            </div>
+            <div class="col-6 text-right">
+              <small class="text-muted">{{ comment.comment_time }}</small>
+            </div>
+            </div>
+        		<div>{{ comment.get_text_as_markdown }}</div>
+          </div>
+        </div>
+    	</div>
+    </div>
+    
+  {% endfor %}
+</div>
+  {% endblock content %}  
